@@ -9,7 +9,7 @@ export const ListingsGrid = ({ listings }: { listings: Listing[] }) => {
     <Grid mx="auto" gap="6" columns={{ sm: "1", md: "2", lg: "3", xl: "4" }}>
       {listings.map((p) => (
         <Card key={p.id}>
-          <Link href={`/listing/${p.id}`}>
+          <Link href={`/listing/${p.id}`} target="_blank">
             <Inset clip="padding-box" side="top" pb="current">
               <img
                 className="inset-card-image"

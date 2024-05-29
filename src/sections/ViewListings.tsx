@@ -45,8 +45,8 @@ export const ViewListings = (props: {
       <Box
         width={{ initial: "100%", xs: "100%", sm: "40vw", md: "20vw" }}
         position={"sticky"}
-        top="0"
-        py={{ initial: "6", sm: "0" }}
+        top={{ initial: "0", sm: "6" }}
+        pt={{ initial: "6", sm: "0" }}
         style={{ zIndex: 10, background: "var(--color-background)" }}
       >
         <PropertyFilters filterOptions={filterOptions} onSubmit={onSubmit} />

@@ -30,3 +30,18 @@ body {
   object-fit: cover;
   width: 100%;
 }
+
+.collapsible {
+  transition: all 0.2s ease;
+  transform-origin: top;
+}
+.collapsible.open {
+  transform: scaleY(1);
+  opacity: 1;
+  height: 34rem;
+}
+.collapsible.close {
+  transform: scaleY(0);
+  opacity: 0;
+  height: 0;
+}

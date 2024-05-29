@@ -1,5 +1,6 @@
 "use client";
 
+import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import {
   PRICE_RANGE,
   BEDROOM_COUNT_RANGE,
@@ -18,6 +19,7 @@ import {
   Slider,
   TextField,
   Button,
+  IconButton,
 } from "@radix-ui/themes";
 import { FormEvent, PropsWithChildren, ReactNode, useState } from "react";
 
@@ -28,7 +30,7 @@ const FilterSection = ({
 }: PropsWithChildren<{ label: string; selection?: ReactNode }>) => {
   return (
     <Box>
-      <Box mb="1">
+      <Box mb="2">
         <Text weight={"bold"}>{label}</Text>
       </Box>
       {selection && <Box mb="4">{selection}</Box>}
@@ -70,6 +72,8 @@ export const PropertyFilters = (props: {
     o.livingAreaRange.max,
   ]);
 
+  const [isOpen, setIsOpen] = useState(true);
+
   const PRICE_UNIT = listingType === "RENT" ? INR_K : INR_L;
 
   const onSubmit = (e: FormEvent) => {
@@ -91,77 +95,91 @@ export const PropertyFilters = (props: {
     });
   };
 
+  const toggleOpen = () => setIsOpen((p) => !p);
+
   return (
-    <Flex direction={"column"} gap="6">
-      <form onSubmit={onSubmit}>
-        <Button style={{ width: "100%" }} size="3">
+    <Flex direction={"column"}>
+      <Flex gap="4" style={{ justifyContent: "stretch" }}>
+        <Button style={{ flex: "1" }} size="3">
           Search
         </Button>
-      </form>
-      <FilterSection label={"Listing Type"}>
-        <SegmentedControl.Root
-          value={listingType}
-          onValueChange={(c: ListingType) => {
-            const changeFactor = c === "RENT" ? 0.01 : 100;
-            setPriceRange(([min, max]) => [
-              min * changeFactor,
-              max * changeFactor,
-            ]);
-            setListingType(c);
-          }}
+        <Box display={{ initial: "block", sm: "none" }}>
+          <IconButton size="3" onClick={toggleOpen}>
+            <DotsVerticalIcon />
+          </IconButton>
+        </Box>
+      </Flex>
+      <Flex
+        pt="6"
+        className={`collapsible ${isOpen ? "open" : "close"}`}
+        direction={"column"}
+        gap="6"
+      >
+        <FilterSection label={"Listing Type"}>
+          <SegmentedControl.Root
+            value={listingType}
+            onValueChange={(c: ListingType) => {
+              const changeFactor = c === "RENT" ? 0.01 : 100;
+              setPriceRange(([min, max]) => [
+                min * changeFactor,
+                max * changeFactor,
+              ]);
+              setListingType(c);
+            }}
+          >
+            <SegmentedControl.Item value="RENT">Rent</SegmentedControl.Item>
+            <SegmentedControl.Item value="SALE">Sale</SegmentedControl.Item>
+          </SegmentedControl.Root>
+        </FilterSection>
+
+        <FilterSection
+          label={"Price Range"}
+          selection={`${toINR(priceRange[0])} - ${toINR(priceRange[1])}`}
         >
-          <SegmentedControl.Item value="RENT">Rent</SegmentedControl.Item>
-          <SegmentedControl.Item value="SALE">Sale</SegmentedControl.Item>
-        </SegmentedControl.Root>
-      </FilterSection>
+          <Slider
+            step={5}
+            minStepsBetweenThumbs={1}
+            value={priceRange}
+            onValueChange={setPriceRange}
+            min={PRICE_RANGE.min * PRICE_UNIT}
+            max={PRICE_RANGE.max * PRICE_UNIT}
+          />
 
-      <FilterSection
-        label={"Price Range"}
-        selection={`${toINR(priceRange[0])} - ${toINR(priceRange[1])}`}
-      >
-        <Slider
-          step={5}
-          minStepsBetweenThumbs={1}
-          value={priceRange}
-          onValueChange={setPriceRange}
-          min={PRICE_RANGE.min * PRICE_UNIT}
-          max={PRICE_RANGE.max * PRICE_UNIT}
-        />
+          <FilterSectionRange
+            min={toINR(PRICE_RANGE.min * PRICE_UNIT)}
+            max={toINR(PRICE_RANGE.max * PRICE_UNIT)}
+          />
+        </FilterSection>
 
-        <FilterSectionRange
-          min={toINR(PRICE_RANGE.min * PRICE_UNIT)}
-          max={toINR(PRICE_RANGE.max * PRICE_UNIT)}
-        />
-      </FilterSection>
-
-      <FilterSection
-        label={"Bedrooms"}
-        selection={`${bedroomCountRange[0]}BHK - ${bedroomCountRange[1]}BHK`}
-      >
-        <Slider
-          value={bedroomCountRange}
-          minStepsBetweenThumbs={1}
-          onValueChange={setBedroomCountRange}
-          {...BEDROOM_COUNT_RANGE}
-        />
-        <FilterSectionRange {...BEDROOM_COUNT_RANGE} />
-      </FilterSection>
-      <FilterSection
-        label={"Living Area"}
-        selection={`${livingAreaRange[0]} sq.ft. - ${livingAreaRange[1]} sq.ft.`}
-      >
-        <Slider
-          step={50}
-          minStepsBetweenThumbs={10}
-          value={livingAreaRange}
-          onValueChange={setLivingAreaRange}
-          {...LIVING_AREA_RANGE}
-        />
-        <FilterSectionRange
-          min={`${LIVING_AREA_RANGE.min} sq.ft.`}
-          max={`${LIVING_AREA_RANGE.max} sq.ft.`}
-        />
-      </FilterSection>
+        <FilterSection
+          label={"Bedrooms"}
+          selection={`${bedroomCountRange[0]}BHK - ${bedroomCountRange[1]}BHK`}
+        >
+          <Slider
+            value={bedroomCountRange}
+            minStepsBetweenThumbs={1}
+            onValueChange={setBedroomCountRange}
+            {...BEDROOM_COUNT_RANGE}
+          />
+          <FilterSectionRange {...BEDROOM_COUNT_RANGE} />
+        </FilterSection>
+        <FilterSection
+          label={"Living Area"}
+          selection={`${livingAreaRange[0]} sq.ft. - ${livingAreaRange[1]} sq.ft.`}
+        >
+          <Slider
+            step={50}
+            minStepsBetweenThumbs={10}
+            value={livingAreaRange}
+            onValueChange={setLivingAreaRange}
+            {...LIVING_AREA_RANGE}
+          />
+          <FilterSectionRange
+            min={`${LIVING_AREA_RANGE.min} sq.ft.`}
+            max={`${LIVING_AREA_RANGE.max} sq.ft.`}
+          />
+        </FilterSection>
+      </Flex>
     </Flex>
   );
 };
