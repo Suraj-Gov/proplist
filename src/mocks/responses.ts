@@ -66,9 +66,9 @@ for (let i = 0; i < LISTING_COUNT; i++) {
       },
       {
         url: faker.image.urlLoremFlickr({
-          category: "bedroom",
+          category: "mattress",
           height: 800,
-          width: 800,
+          width: 1400,
         }),
         title: "Bedroom",
       },
@@ -76,25 +76,25 @@ for (let i = 0; i < LISTING_COUNT; i++) {
         url: faker.image.urlLoremFlickr({
           category: "kitchen",
           height: 800,
-          width: 800,
+          width: 1400,
         }),
         title: "Kitchen",
       },
       {
         url: faker.image.urlLoremFlickr({
-          category: "interiors",
+          category: "room",
           height: 800,
-          width: 800,
+          width: 1400,
         }),
         title: "Interiors",
       },
       {
         url: faker.image.urlLoremFlickr({
-          category: "interiors",
+          category: "garden",
           height: 800,
-          width: 800,
+          width: 1400,
         }),
-        title: "Interiors",
+        title: "Garden",
       },
     ],
     contact: {

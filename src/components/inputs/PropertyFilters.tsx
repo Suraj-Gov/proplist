@@ -100,7 +100,7 @@ export const PropertyFilters = (props: {
   return (
     <Flex direction={"column"}>
       <Flex gap="4" style={{ justifyContent: "stretch" }}>
-        <Button style={{ flex: "1" }} size="3">
+        <Button style={{ flex: "1" }} size="3" onClick={onSubmit}>
           Search
         </Button>
         <Box display={{ initial: "block", sm: "none" }}>
