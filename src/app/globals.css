@@ -24,3 +24,9 @@ body {
     text-wrap: balance;
   }
 }
+
+.inset-card-image {
+  display: block;
+  object-fit: cover;
+  width: 100%;
+}

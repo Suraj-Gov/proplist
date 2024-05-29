@@ -1,9 +1,11 @@
 "use client";
+import { ListingsGrid } from "@/components/ListingsGrid";
 import { PropertyFilters } from "@/components/inputs/PropertyFilters";
 import { defaultFilterOptions } from "@/constants";
 import { Listing, api } from "@/mocks/responses";
 import { FilterOptions } from "@/types";
-import { Flex } from "@radix-ui/themes";
+import { toINR } from "@/utils";
+import { Box, Card, Flex, Grid, Inset, Spinner, Text } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -16,7 +18,7 @@ export const ViewListings = (props: {
     props.initFilterOptions ?? defaultFilterOptions
   );
 
-  const { data, isLoading } = useQuery({
+  const { data: listings, isLoading } = useQuery({
     queryKey: ["listings", filterOptions],
     queryFn: () => api.get.properties(filterOptions),
     initialData: props.initListings,
@@ -35,13 +37,26 @@ export const ViewListings = (props: {
 
   return (
     <Flex
-      m="6"
       direction={{ initial: "column", xs: "column", sm: "row" }}
       gap="4"
+      position={"relative"}
+      align={"start"}
     >
-      <PropertyFilters filterOptions={filterOptions} onSubmit={onSubmit} />
-      {isLoading && "loading"}
-      {data && <pre>{JSON.stringify(data)}</pre>}
+      <Box
+        width={{ initial: "100%", xs: "100%", sm: "40vw", md: "20vw" }}
+        position={"sticky"}
+        top="0"
+        py={{ initial: "6", sm: "0" }}
+        style={{ zIndex: 10, background: "var(--color-background)" }}
+      >
+        <PropertyFilters filterOptions={filterOptions} onSubmit={onSubmit} />
+      </Box>
+      {isLoading && (
+        <Flex justify={"center"}>
+          <Spinner size="3" />
+        </Flex>
+      )}
+      {listings && <ListingsGrid listings={listings} />}
     </Flex>
   );
 };

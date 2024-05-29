@@ -9,6 +9,7 @@ import {
   INR_L,
 } from "@/mocks/responses";
 import { FilterOptions } from "@/types";
+import { toINR } from "@/utils";
 import {
   Text,
   Flex,
@@ -19,13 +20,6 @@ import {
   Button,
 } from "@radix-ui/themes";
 import { FormEvent, PropsWithChildren, ReactNode, useState } from "react";
-
-const f = new Intl.NumberFormat("en-IN", {
-  style: "currency",
-  currency: "INR",
-  notation: "compact",
-});
-const toINR = (n: number) => f.format(n).replace("T", "K");
 
 const FilterSection = ({
   children,
@@ -91,32 +85,30 @@ export const PropertyFilters = (props: {
         max: livingAreaRange[1],
       },
       priceRange: {
-        min: priceRange[0] * PRICE_UNIT,
-        max: priceRange[1] * PRICE_UNIT,
+        min: priceRange[0],
+        max: priceRange[1],
       },
     });
   };
 
   return (
-    <Flex
-      width={{ initial: "100%", xs: "100%", sm: "40vw", md: "25vw" }}
-      direction={"column"}
-      gap="6"
-    >
-      <Flex asChild gap="2">
-        <form onSubmit={onSubmit}>
-          <Box flexGrow={"1"}>
-            <TextField.Root size="3">
-              <TextField.Slot>Locality</TextField.Slot>
-            </TextField.Root>
-          </Box>
-          <Button size="3">Search</Button>
-        </form>
-      </Flex>
+    <Flex direction={"column"} gap="6">
+      <form onSubmit={onSubmit}>
+        <Button style={{ width: "100%" }} size="3">
+          Search
+        </Button>
+      </form>
       <FilterSection label={"Listing Type"}>
         <SegmentedControl.Root
           value={listingType}
-          onValueChange={(c) => setListingType(c as ListingType)}
+          onValueChange={(c: ListingType) => {
+            const changeFactor = c === "RENT" ? 0.01 : 100;
+            setPriceRange(([min, max]) => [
+              min * changeFactor,
+              max * changeFactor,
+            ]);
+            setListingType(c);
+          }}
         >
           <SegmentedControl.Item value="RENT">Rent</SegmentedControl.Item>
           <SegmentedControl.Item value="SALE">Sale</SegmentedControl.Item>
@@ -125,9 +117,7 @@ export const PropertyFilters = (props: {
 
       <FilterSection
         label={"Price Range"}
-        selection={`${toINR(priceRange[0] * PRICE_UNIT)} - ${toINR(
-          priceRange[1] * PRICE_UNIT
-        )}`}
+        selection={`${toINR(priceRange[0])} - ${toINR(priceRange[1])}`}
       >
         <Slider
           step={5}

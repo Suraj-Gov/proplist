@@ -60,7 +60,7 @@ for (let i = 0; i < LISTING_COUNT; i++) {
         url: faker.image.urlLoremFlickr({
           category: "building",
           height: 800,
-          width: 800,
+          width: 1400,
         }),
         title: "Exterior",
       },

@@ -4,6 +4,7 @@ import "@radix-ui/themes/styles.css";
 import "./overrides.css";
 import "./globals.css";
 import { Provider } from "@/components/Provider";
+import { Box } from "@radix-ui/themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Provider>{children}</Provider>
+        <Provider>
+          <Box m="6">{children}</Box>
+        </Provider>
       </body>
     </html>
   );
