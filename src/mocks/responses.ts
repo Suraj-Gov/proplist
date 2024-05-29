@@ -1,8 +1,20 @@
 import { faker } from "@faker-js/faker";
 
 const LISTING_COUNT = 10000;
-const INR_L = 100000;
-const INR_K = 1000;
+export const INR_L = 100000;
+export const INR_K = 1000;
+export const PRICE_RANGE = {
+  min: 14,
+  max: 450,
+};
+export const BEDROOM_COUNT_RANGE = {
+  min: 1,
+  max: 7,
+};
+export const LIVING_AREA_RANGE = {
+  min: 700,
+  max: 6000,
+};
 
 type ListingImage = {
   url: string;
@@ -12,8 +24,8 @@ type ListingContact = {
   email: string;
   name: string;
 };
-type ListingType = "RENT" | "SALE";
-type Listing = {
+export type ListingType = "RENT" | "SALE";
+export type Listing = {
   id: number;
   name: string;
   type: ListingType;
@@ -40,10 +52,9 @@ for (let i = 0; i < LISTING_COUNT; i++) {
     title: faker.commerce.productName(),
     description: faker.commerce.productDescription(),
     price:
-      faker.number.int({ min: 14, max: 450 }) *
-      (listingType === "SALE" ? INR_L : INR_K),
-    bedroomCount: faker.number.int({ min: 1, max: 7 }),
-    areaSqFt: faker.number.int({ min: 700, max: 7000 }),
+      faker.number.int(PRICE_RANGE) * (listingType === "SALE" ? INR_L : INR_K),
+    bedroomCount: faker.number.int(BEDROOM_COUNT_RANGE),
+    areaSqFt: faker.number.int(LIVING_AREA_RANGE),
     images: [
       {
         url: faker.image.urlLoremFlickr({
@@ -96,11 +107,11 @@ for (let i = 0; i < LISTING_COUNT; i++) {
 }
 
 const delayRes = <T>(data: T): Promise<T> => {
-  const delayMs = faker.number.int({ min: 700, max: 1300 });
+  const delayMs = faker.number.int({ min: 300, max: 900 });
   return new Promise((res) => setTimeout(() => res(data), delayMs));
 };
 
-export const get = {
+const get = {
   properties: (
     args: Partial<{
       listingType: ListingType;
@@ -141,8 +152,12 @@ export const get = {
     const slice = items.splice(offset, limit);
     return delayRes(slice);
   },
-  getById: (id: number) => {
+  property: (id: number) => {
     const item = listings.get(id);
     return delayRes(item);
   },
+};
+
+export const api = {
+  get,
 };
