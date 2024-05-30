@@ -12,3 +12,5 @@ export const defaultFilterOptions: FilterOptions = {
   },
   priceRange: { min: 25000, max: 35000 },
 };
+
+export const FETCH_LISTINGS_LIMIT = 20;

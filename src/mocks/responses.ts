@@ -1,3 +1,4 @@
+import { FETCH_LISTINGS_LIMIT } from "@/constants";
 import { faker } from "@faker-js/faker";
 
 const LISTING_COUNT = 10000;
@@ -128,7 +129,7 @@ const get = {
         max: number;
       };
     }>,
-    limit = 20,
+    limit = FETCH_LISTINGS_LIMIT,
     offset = 0
   ) => {
     let items = Array.from(listings.values());

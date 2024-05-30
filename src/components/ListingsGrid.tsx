@@ -1,10 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import { Listing } from "@/mocks/responses";
 import { toINR } from "@/utils";
-import { Text, Grid, Card, Inset, Box } from "@radix-ui/themes";
+import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
+import { Text, Grid, Card, Inset, Box, Flex, Button } from "@radix-ui/themes";
 import Link from "next/link";
+import { PropsWithChildren } from "react";
 
-export const ListingsGrid = ({ listings }: { listings: Listing[] }) => {
+export const ListingsGrid = ({
+  listings,
+  children,
+}: PropsWithChildren<{ listings: Listing[] }>) => {
   return (
     <Grid mx="auto" gap="6" columns={{ sm: "1", md: "2", lg: "3", xl: "4" }}>
       {listings.map((p) => (
@@ -35,6 +40,7 @@ export const ListingsGrid = ({ listings }: { listings: Listing[] }) => {
           </Box>
         </Card>
       ))}
+      {children}
     </Grid>
   );
 };
